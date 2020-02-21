@@ -1,0 +1,835 @@
+#!/usr/bin/env -S cwltool --singularity
+{
+    "cwlVersion": "v1.0", 
+    "$graph": [
+        {
+            "class": "CommandLineTool", 
+            "id": "#bwa-mem.cwl", 
+            "baseCommand": [
+                "bwa", 
+                "mem"
+            ], 
+            "inputs": [
+                {
+                    "id": "#bwa-mem.cwl/sample_name", 
+                    "type": "string"
+                }, 
+                {
+                    "id": "#bwa-mem.cwl/indexed_reference", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.indexed_reference.basename).amb", 
+                        "$(inputs.indexed_reference.basename).ann", 
+                        "$(inputs.indexed_reference.basename).bwt", 
+                        "$(inputs.indexed_reference.basename).pac", 
+                        "$(inputs.indexed_reference.basename).sa"
+                    ]
+                }, 
+                {
+                    "id": "#bwa-mem.cwl/in1", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 1
+                    }
+                }, 
+                {
+                    "id": "#bwa-mem.cwl/in2", 
+                    "type": [
+                        "null", 
+                        "File"
+                    ], 
+                    "inputBinding": {
+                        "position": 2
+                    }
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#bwa-mem.cwl/result_sam", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "mapped.$(inputs.sample_name || \"result\").sam"
+                    }
+                }
+            ], 
+            "label": "bwa-mem", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "-o", 
+                    "valueFrom": "mapped.$(inputs.sample_name || \"result\").sam"
+                }, 
+                {
+                    "position": 0, 
+                    "prefix": "", 
+                    "separate": false, 
+                    "valueFrom": "-M"
+                }, 
+                {
+                    "position": 0, 
+                    "prefix": "-t", 
+                    "valueFrom": "$(runtime.cores)"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/bwa:0.7.17"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ], 
+            "$namespaces": {
+            }
+        }, 
+        {
+            "class": "CommandLineTool", 
+            "id": "#gatk-addorreplacereadgroups.cwl", 
+            "baseCommand": [
+                "gatk", 
+                "AddOrReplaceReadGroups"
+            ], 
+            "inputs": [
+                {
+                    "id": "#gatk-addorreplacereadgroups.cwl/input", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--INPUT"
+                    }
+                }, 
+                {
+                    "id": "#gatk-addorreplacereadgroups.cwl/rglb", 
+                    "type": "string", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--RGLB"
+                    }
+                }, 
+                {
+                    "id": "#gatk-addorreplacereadgroups.cwl/rgpl", 
+                    "type": "string", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--RGPL"
+                    }
+                }, 
+                {
+                    "id": "#gatk-addorreplacereadgroups.cwl/rgpu", 
+                    "type": "string", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--RGPU"
+                    }
+                }, 
+                {
+                    "id": "#gatk-addorreplacereadgroups.cwl/rgsm", 
+                    "type": "string", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--RGSM"
+                    }
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#gatk-addorreplacereadgroups.cwl/output", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "addrep.$(inputs.input.nameroot).bam"
+                    }
+                }
+            ], 
+            "label": "gatk-AddOrReplaceReadGroups", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "--OUTPUT", 
+                    "valueFrom": "addrep.$(inputs.input.nameroot).bam"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        }, 
+        {
+            "class": "CommandLineTool", 
+            "id": "#gatk-applybqsr.cwl", 
+            "baseCommand": [
+                "gatk", 
+                "ApplyBQSR"
+            ], 
+            "inputs": [
+                {
+                    "id": "#gatk-applybqsr.cwl/reference", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--reference"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.reference.basename).fai", 
+                        "$(inputs.reference.nameroot).dict"
+                    ]
+                }, 
+                {
+                    "id": "#gatk-applybqsr.cwl/input", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--input"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.input.basename).bai"
+                    ]
+                }, 
+                {
+                    "id": "#gatk-applybqsr.cwl/bqsr_recal_file", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--bqsr-recal-file"
+                    }
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#gatk-applybqsr.cwl/recal_bam", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "recal.$(inputs.input.nameroot).bam"
+                    }, 
+                    "secondaryFiles": [
+                        "recal.$(inputs.input.nameroot).bam.bai"
+                    ]
+                }
+            ], 
+            "label": "gatk-ApplyBQSR", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "--output", 
+                    "valueFrom": "recal.$(inputs.input.nameroot).bam"
+                }, 
+                {
+                    "position": 0, 
+                    "prefix": "--create-output-bam-index", 
+                    "valueFrom": "true"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        }, 
+        {
+            "class": "CommandLineTool", 
+            "id": "#gatk-baserecalibrator.cwl", 
+            "baseCommand": [
+                "gatk", 
+                "BaseRecalibrator"
+            ], 
+            "inputs": [
+                {
+                    "id": "#gatk-baserecalibrator.cwl/input", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--input"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.input.basename).bai"
+                    ]
+                }, 
+                {
+                    "id": "#gatk-baserecalibrator.cwl/known_sites", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--known-sites"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.known_sites.basename).idx"
+                    ]
+                }, 
+                {
+                    "id": "#gatk-baserecalibrator.cwl/reference", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--reference"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.reference.basename).fai", 
+                        "$(inputs.reference.nameroot).dict"
+                    ]
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#gatk-baserecalibrator.cwl/recalibration_table", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "recal.$(inputs.input.basename).txt"
+                    }
+                }
+            ], 
+            "label": "gatk-BaseRecalibrator", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "--output", 
+                    "valueFrom": "recal.$(inputs.input.basename).txt"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        }, 
+        {
+            "class": "CommandLineTool", 
+            "id": "#gatk-haplotypecallergvcf.cwl", 
+            "baseCommand": [
+                "gatk", 
+                "HaplotypeCaller"
+            ], 
+            "inputs": [
+                {
+                    "id": "#gatk-haplotypecallergvcf.cwl/input", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--input"
+                    }
+                }, 
+                {
+                    "id": "#gatk-haplotypecallergvcf.cwl/reference", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--reference"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.reference.basename).fai", 
+                        "$(inputs.reference.nameroot).dict"
+                    ]
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#gatk-haplotypecallergvcf.cwl/gvcf", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "$(inputs.input.nameroot).g.vcf"
+                    }
+                }
+            ], 
+            "label": "gatk-HaplotypeCallerGVCF", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "--output", 
+                    "valueFrom": "$(inputs.input.nameroot).g.vcf"
+                }, 
+                {
+                    "position": 0, 
+                    "prefix": "--emit-ref-confidence", 
+                    "valueFrom": "GVCF"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        }, 
+        {
+            "class": "CommandLineTool", 
+            "id": "#gatk-haplotypecallervcf.cwl", 
+            "baseCommand": [
+                "gatk", 
+                "HaplotypeCaller"
+            ], 
+            "inputs": [
+                {
+                    "id": "#gatk-haplotypecallervcf.cwl/input", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--input"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.input.basename).bai"
+                    ]
+                }, 
+                {
+                    "id": "#gatk-haplotypecallervcf.cwl/reference", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "--reference"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.reference.basename).fai", 
+                        "$(inputs.reference.nameroot).dict"
+                    ]
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#gatk-haplotypecallervcf.cwl/vcf", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "$(inputs.input.nameroot).vcf"
+                    }, 
+                    "secondaryFiles": [
+                        "$(inputs.input.nameroot).vcf.idx"
+                    ]
+                }
+            ], 
+            "label": "gatk-HaplotypeCallerVCF", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "--output", 
+                    "valueFrom": "$(inputs.input.nameroot).vcf"
+                }, 
+                {
+                    "position": 0, 
+                    "prefix": "--create-output-variant-index", 
+                    "valueFrom": "true"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        }, 
+        {
+            "class": "CommandLineTool", 
+            "id": "#gatk-markduplicatesspark.cwl", 
+            "baseCommand": [
+                "gatk", 
+                "MarkDuplicatesSpark"
+            ], 
+            "inputs": [
+                {
+                    "id": "#gatk-markduplicatesspark.cwl/input", 
+                    "type": "File", 
+                    "inputBinding": {
+                        "position": 0, 
+                        "prefix": "-I"
+                    }
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#gatk-markduplicatesspark.cwl/markdup_bam", 
+                    "type": "File", 
+                    "outputBinding": {
+                        "glob": "markdup.$(inputs.input.nameroot).bam"
+                    }, 
+                    "secondaryFiles": [
+                        "markdup.$(inputs.input.nameroot).bam.bai"
+                    ]
+                }
+            ], 
+            "label": "gatk-MarkDuplicatesSpark", 
+            "arguments": [
+                {
+                    "position": 0, 
+                    "prefix": "-O", 
+                    "valueFrom": "markdup.$(inputs.input.nameroot).bam"
+                }, 
+                {
+                    "position": 0, 
+                    "prefix": "--create-output-bam-index", 
+                    "valueFrom": "true"
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "DockerRequirement", 
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                }, 
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        }, 
+        {
+            "class": "Workflow", 
+            "id": "#main", 
+            "label": "varcall-standard", 
+            "inputs": [
+                {
+                    "id": "#main/sample_name", 
+                    "type": {
+                        "type": "array", 
+                        "items": "string"
+                    }, 
+                }, 
+                {
+                    "id": "#main/reference", 
+                    "type": "File", 
+                    "secondaryFiles": [
+                        ".amb", 
+                        ".ann", 
+                        ".bwt", 
+                        ".pac", 
+                        ".sa", 
+                        "^.dict", 
+                        ".fai"
+                    ], 
+                }, 
+                {
+                    "id": "#main/platform", 
+                    "type": "string", 
+                }, 
+                {
+                    "id": "#main/reads2", 
+                    "type": {
+                        "type": "array", 
+                        "items": "File"
+                    }, 
+                }, 
+                {
+                    "id": "#main/reads1", 
+                    "type": {
+                        "type": "array", 
+                        "items": "File"
+                    }, 
+                }
+            ], 
+            "outputs": [
+                {
+                    "id": "#main/gvcf", 
+                    "outputSource": [
+                        "#main/gatk_haplotypecallergvcf/gvcf"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }, 
+                {
+                    "id": "#main/result_sam", 
+                    "outputSource": [
+                        "#main/bwa_mem/result_sam"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }, 
+                {
+                    "id": "#main/output", 
+                    "outputSource": [
+                        "#main/gatk_addorreplacereadgroups/output"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }, 
+                {
+                    "id": "#main/markdup_bam", 
+                    "outputSource": [
+                        "#main/gatk_markduplicatesspark/markdup_bam"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }, 
+                {
+                    "id": "#main/vcf", 
+                    "outputSource": [
+                        "#main/gatk_haplotypecaller/vcf"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }, 
+                {
+                    "id": "#main/recalibration_table", 
+                    "outputSource": [
+                        "#main/gatk_baserecalibrator/recalibration_table"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }, 
+                {
+                    "id": "#main/recal_bam", 
+                    "outputSource": [
+                        "#main/gatk_applybqsr/recal_bam"
+                    ], 
+                    "type": [
+                        "File", 
+                        {
+                            "type": "array", 
+                            "items": "File"
+                        }
+                    ], 
+                }
+            ], 
+            "steps": [
+                {
+                    "id": "#main/bwa_mem", 
+                    "in": [
+                        {
+                            "id": "#main/bwa_mem/sample_name", 
+                            "source": "#main/sample_name"
+                        }, 
+                        {
+                            "id": "#main/bwa_mem/indexed_reference", 
+                            "source": "#main/reference"
+                        }, 
+                        {
+                            "id": "#main/bwa_mem/in1", 
+                            "source": "#main/reads1"
+                        }, 
+                        {
+                            "id": "#main/bwa_mem/in2", 
+                            "source": "#main/reads2"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/bwa_mem/result_sam"
+                        }
+                    ], 
+                    "run": "#bwa-mem.cwl", 
+                    "label": "bwa-mem", 
+                    "scatter": [
+                        "#main/bwa_mem/sample_name", 
+                        "#main/bwa_mem/in1", 
+                        "#main/bwa_mem/in2"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }, 
+                {
+                    "id": "#main/gatk_addorreplacereadgroups", 
+                    "in": [
+                        {
+                            "id": "#main/gatk_addorreplacereadgroups/input", 
+                            "source": "#main/bwa_mem/result_sam"
+                        }, 
+                        {
+                            "id": "#main/gatk_addorreplacereadgroups/rglb", 
+                            "source": "#main/sample_name"
+                        }, 
+                        {
+                            "id": "#main/gatk_addorreplacereadgroups/rgpl", 
+                            "source": "#main/sample_name"
+                        }, 
+                        {
+                            "id": "#main/gatk_addorreplacereadgroups/rgpu", 
+                            "source": "#main/platform"
+                        }, 
+                        {
+                            "id": "#main/gatk_addorreplacereadgroups/rgsm", 
+                            "source": "#main/sample_name"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/gatk_addorreplacereadgroups/output"
+                        }
+                    ], 
+                    "run": "#gatk-addorreplacereadgroups.cwl", 
+                    "label": "gatk-AddOrReplaceReadGroups", 
+                    "scatter": [
+                        "#main/gatk_addorreplacereadgroups/input", 
+                        "#main/gatk_addorreplacereadgroups/rglb", 
+                        "#main/gatk_addorreplacereadgroups/rgpl", 
+                        "#main/gatk_addorreplacereadgroups/rgsm"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }, 
+                {
+                    "id": "#main/gatk_markduplicatesspark", 
+                    "in": [
+                        {
+                            "id": "#main/gatk_markduplicatesspark/input", 
+                            "source": "#main/gatk_addorreplacereadgroups/output"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/gatk_markduplicatesspark/markdup_bam"
+                        }
+                    ], 
+                    "run": "#gatk-markduplicatesspark.cwl", 
+                    "label": "gatk-MarkDuplicatesSpark", 
+                    "scatter": [
+                        "#main/gatk_markduplicatesspark/input"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }, 
+                {
+                    "id": "#main/gatk_haplotypecaller", 
+                    "in": [
+                        {
+                            "id": "#main/gatk_haplotypecaller/input", 
+                            "source": "#main/gatk_markduplicatesspark/markdup_bam"
+                        }, 
+                        {
+                            "id": "#main/gatk_haplotypecaller/reference", 
+                            "source": "#main/reference"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/gatk_haplotypecaller/vcf"
+                        }
+                    ], 
+                    "run": "#gatk-haplotypecallervcf.cwl", 
+                    "label": "gatk-HaplotypeCallerVCF", 
+                    "scatter": [
+                        "#main/gatk_haplotypecaller/input"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }, 
+                {
+                    "id": "#main/gatk_baserecalibrator", 
+                    "in": [
+                        {
+                            "id": "#main/gatk_baserecalibrator/input", 
+                            "source": "#main/gatk_markduplicatesspark/markdup_bam"
+                        }, 
+                        {
+                            "id": "#main/gatk_baserecalibrator/known_sites", 
+                            "source": "#main/gatk_haplotypecaller/vcf"
+                        }, 
+                        {
+                            "id": "#main/gatk_baserecalibrator/reference", 
+                            "source": "#main/reference"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/gatk_baserecalibrator/recalibration_table"
+                        }
+                    ], 
+                    "run": "#gatk-baserecalibrator.cwl", 
+                    "label": "gatk-BaseRecalibrator", 
+                    "scatter": [
+                        "#main/gatk_baserecalibrator/input", 
+                        "#main/gatk_baserecalibrator/known_sites"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }, 
+                {
+                    "id": "#main/gatk_applybqsr", 
+                    "in": [
+                        {
+                            "id": "#main/gatk_applybqsr/reference", 
+                            "source": "#main/reference"
+                        }, 
+                        {
+                            "id": "#main/gatk_applybqsr/input", 
+                            "source": "#main/gatk_markduplicatesspark/markdup_bam"
+                        }, 
+                        {
+                            "id": "#main/gatk_applybqsr/bqsr_recal_file", 
+                            "source": "#main/gatk_baserecalibrator/recalibration_table"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/gatk_applybqsr/recal_bam"
+                        }
+                    ], 
+                    "run": "#gatk-applybqsr.cwl", 
+                    "label": "gatk-ApplyBQSR", 
+                    "scatter": [
+                        "#main/gatk_applybqsr/input", 
+                        "#main/gatk_applybqsr/bqsr_recal_file"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }, 
+                {
+                    "id": "#main/gatk_haplotypecallergvcf", 
+                    "in": [
+                        {
+                            "id": "#main/gatk_haplotypecallergvcf/input", 
+                            "source": "#main/gatk_applybqsr/recal_bam"
+                        }, 
+                        {
+                            "id": "#main/gatk_haplotypecallergvcf/reference", 
+                            "source": "#main/reference"
+                        }
+                    ], 
+                    "out": [
+                        {
+                            "id": "#main/gatk_haplotypecallergvcf/gvcf"
+                        }
+                    ], 
+                    "run": "#gatk-haplotypecallergvcf.cwl", 
+                    "label": "gatk-HaplotypeCallerGVCF", 
+                    "scatter": [
+                        "#main/gatk_haplotypecallergvcf/input"
+                    ], 
+                    "scatterMethod": "dotproduct", 
+                }
+            ], 
+            "requirements": [
+                {
+                    "class": "ScatterFeatureRequirement"
+                }
+            ]
+        }
+    ]
+}

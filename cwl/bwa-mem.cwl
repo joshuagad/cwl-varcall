@@ -7,8 +7,7 @@ baseCommand:
   - bwa
   - mem
 inputs:
-  - 'sbg:toolDefaultValue': result
-    id: sample_name
+  - id: sample_name
     type: string
   - id: indexed_reference
     type: File

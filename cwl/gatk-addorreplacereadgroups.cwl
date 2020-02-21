@@ -12,7 +12,6 @@ inputs:
     inputBinding:
       position: 0
       prefix: '--INPUT'
-    'sbg:fileTypes': 'sam, bam'
   - id: rglb
     type: string
     inputBinding:
