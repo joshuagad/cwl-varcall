@@ -13,15 +13,15 @@ inputs:
       position: 0
       prefix: '--reference'
     secondaryFiles:
-      - $(inputs.reference.basename).fai
-      - $(inputs.reference.nameroot).dict
+      - .fai
+      - ^.dict
   - id: input
     type: File
     inputBinding:
       position: 0
       prefix: '--input'
     secondaryFiles:
-      - $(inputs.input.basename).bai
+      - .bai
   - id: bqsr_recal_file
     type: File
     inputBinding:

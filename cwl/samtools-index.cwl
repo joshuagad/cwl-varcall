@@ -17,7 +17,7 @@ outputs:
     outputBinding:
       glob: $(inputs.input_bam.basename)
     secondaryFiles:
-      - $(inputs.input_bam.basename).bai
+      - .bai
 label: samtools-index
 requirements:
   - class: DockerRequirement

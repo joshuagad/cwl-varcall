@@ -13,15 +13,15 @@ inputs:
       position: 0
       prefix: '--input'
     secondaryFiles:
-      - $(inputs.input.basename).bai
+      - .bai
   - id: reference
     type: File
     inputBinding:
       position: 0
       prefix: '--reference'
     secondaryFiles:
-      - $(inputs.reference.basename).fai
-      - $(inputs.reference.nameroot).dict
+      - .fai
+      - ^.dict
 outputs:
   - id: vcf
     type: File

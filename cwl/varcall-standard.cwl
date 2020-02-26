@@ -61,15 +61,6 @@ outputs:
         items: File
     'sbg:x': 491.4662780761719
     'sbg:y': 661.3841552734375
-  - id: markdup_bam
-    outputSource:
-      - gatk_markduplicatesspark/markdup_bam
-    type:
-      - File
-      - type: array
-        items: File
-    'sbg:x': 732.275634765625
-    'sbg:y': 665.225830078125
   - id: vcf
     outputSource:
       - gatk_haplotypecaller/vcf
@@ -141,25 +132,12 @@ steps:
       - rgpl
       - rgsm
     scatterMethod: dotproduct
-    'sbg:x': 373.2916564941406
-    'sbg:y': 473.4861145019531
-  - id: gatk_markduplicatesspark
-    in:
-      - id: input
-        source: gatk_addorreplacereadgroups/output
-    out:
-      - id: markdup_bam
-    run: ./gatk-markduplicatesspark.cwl
-    label: gatk-MarkDuplicatesSpark
-    scatter:
-      - input
-    scatterMethod: dotproduct
-    'sbg:x': 532.3472290039062
-    'sbg:y': 463.8055419921875
+    'sbg:x': 342.4382019042969
+    'sbg:y': 437.1689147949219
   - id: gatk_haplotypecaller
     in:
       - id: input
-        source: gatk_markduplicatesspark/markdup_bam
+        source: samtools_index/indexed_bam
       - id: reference
         source: reference
     out:
@@ -174,7 +152,7 @@ steps:
   - id: gatk_baserecalibrator
     in:
       - id: input
-        source: gatk_markduplicatesspark/markdup_bam
+        source: samtools_index/indexed_bam
       - id: known_sites
         source: gatk_haplotypecaller/vcf
       - id: reference
@@ -194,7 +172,7 @@ steps:
       - id: reference
         source: reference
       - id: input
-        source: gatk_markduplicatesspark/markdup_bam
+        source: samtools_index/indexed_bam
       - id: bqsr_recal_file
         source: gatk_baserecalibrator/recalibration_table
     out:
@@ -210,7 +188,7 @@ steps:
   - id: gatk_haplotypecallergvcf
     in:
       - id: input
-        source: gatk_applybqsr/recal_bam
+        source: samtools_index_1/indexed_bam
       - id: reference
         source: reference
     out:
@@ -222,5 +200,56 @@ steps:
     scatterMethod: dotproduct
     'sbg:x': 1014.1388549804688
     'sbg:y': 124.69445037841797
+  - id: gatk_sortsam
+    in:
+      - id: input
+        source: gatk_addorreplacereadgroups/output
+      - id: sort_order
+        default: coordinate
+    out:
+      - id: markdup_bam
+    run: ./gatk-sortsam.cwl
+    label: gatk-SortSam
+    scatter:
+      - input
+    'sbg:x': 509.83843994140625
+    'sbg:y': 546.631591796875
+  - id: gatk_markduplicates
+    in:
+      - id: input
+        source: gatk_sortsam/markdup_bam
+    out:
+      - id: markdup_bam
+      - id: metrics_file
+    run: ./gatk-markduplicates.cwl
+    label: gatk-MarkDuplicates
+    scatter:
+      - input
+    'sbg:x': 630.1689453125
+    'sbg:y': 644.716064453125
+  - id: samtools_index
+    in:
+      - id: input_bam
+        source: gatk_markduplicates/markdup_bam
+    out:
+      - id: indexed_bam
+    run: ./samtools-index.cwl
+    label: samtools-index
+    scatter:
+      - input_bam
+    'sbg:x': 689.452880859375
+    'sbg:y': 518.5765380859375
+  - id: samtools_index_1
+    in:
+      - id: input_bam
+        source: gatk_applybqsr/recal_bam
+    out:
+      - id: indexed_bam
+    run: ./samtools-index.cwl
+    label: samtools-index
+    scatter:
+      - input_bam
+    'sbg:x': 1024.192138671875
+    'sbg:y': 262.8996276855469
 requirements:
   - class: ScatterFeatureRequirement

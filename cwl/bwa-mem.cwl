@@ -14,11 +14,11 @@ inputs:
     inputBinding:
       position: 0
     secondaryFiles:
-      - $(inputs.indexed_reference.basename).amb
-      - $(inputs.indexed_reference.basename).ann
-      - $(inputs.indexed_reference.basename).bwt
-      - $(inputs.indexed_reference.basename).pac
-      - $(inputs.indexed_reference.basename).sa
+      - .amb
+      - .ann
+      - .bwt
+      - .pac
+      - .sa
   - id: in1
     type: File
     inputBinding:

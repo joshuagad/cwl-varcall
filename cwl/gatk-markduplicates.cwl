@@ -17,6 +17,8 @@ outputs:
     type: File
     outputBinding:
       glob: markdup.$(inputs.input.nameroot).bam
+    secondaryFiles:
+      - ^bai
   - id: metrics_file
     type: File?
     outputBinding:

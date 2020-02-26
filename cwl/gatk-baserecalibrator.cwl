@@ -13,7 +13,7 @@ inputs:
       position: 0
       prefix: '--input'
     secondaryFiles:
-      - $(inputs.input.basename).bai
+      - .bai
   - id: known_sites
     type: File
     inputBinding:
@@ -27,8 +27,8 @@ inputs:
       position: 0
       prefix: '--reference'
     secondaryFiles:
-      - $(inputs.reference.basename).fai
-      - $(inputs.reference.nameroot).dict
+      - .fai
+      - ^.dict
 outputs:
   - id: recalibration_table
     type: File

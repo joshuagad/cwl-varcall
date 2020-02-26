@@ -12,14 +12,16 @@ inputs:
     inputBinding:
       position: 0
       prefix: '--input'
+    secondaryFiles:
+      - .bai
   - id: reference
     type: File
     inputBinding:
       position: 0
       prefix: '--reference'
     secondaryFiles:
-      - $(inputs.reference.basename).fai
-      - $(inputs.reference.nameroot).dict
+      - .fai
+      - ^.dict
 outputs:
   - id: gvcf
     type: File
