@@ -18,7 +18,7 @@ inputs:
       position: 0
       prefix: '--SORT_ORDER'
 outputs:
-  - id: markdup_bam
+  - id: sorted_bam
     type: File
     outputBinding:
       glob: sorted.$(inputs.input.nameroot).bam
