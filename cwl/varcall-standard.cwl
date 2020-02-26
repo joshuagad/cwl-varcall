@@ -59,8 +59,8 @@ outputs:
       - File
       - type: array
         items: File
-    'sbg:x': 491.4662780761719
-    'sbg:y': 661.3841552734375
+    'sbg:x': 486.7845764160156
+    'sbg:y': 659.9461669921875
   - id: vcf
     outputSource:
       - gatk_haplotypecaller/vcf
@@ -88,6 +88,43 @@ outputs:
         items: File
     'sbg:x': 993.1906127929688
     'sbg:y': 651.49853515625
+  - id: metrics_file
+    outputSource:
+      - gatk_markduplicates/metrics_file
+    type:
+      - 'null'
+      - File
+      - type: array
+        items: File
+    'sbg:x': 704.8298950195312
+    'sbg:y': 684.1077270507812
+  - id: indexed_bam
+    outputSource:
+      - samtools_index/indexed_bam
+    type:
+      - File
+      - type: array
+        items: File
+    'sbg:x': 824.8849487304688
+    'sbg:y': 670.192138671875
+  - id: indexed_bam_1
+    outputSource:
+      - samtools_index_1/indexed_bam
+    type:
+      - File
+      - type: array
+        items: File
+    'sbg:x': 1168.77880859375
+    'sbg:y': 329.3497314453125
+  - id: sorted_bam
+    outputSource:
+      - gatk_sortsam/sorted_bam
+    type:
+      - File
+      - type: array
+        items: File
+    'sbg:x': 598.4088134765625
+    'sbg:y': 671.5899658203125
 steps:
   - id: bwa_mem
     in:
@@ -200,24 +237,10 @@ steps:
     scatterMethod: dotproduct
     'sbg:x': 1014.1388549804688
     'sbg:y': 124.69445037841797
-  - id: gatk_sortsam
-    in:
-      - id: input
-        source: gatk_addorreplacereadgroups/output
-      - id: sort_order
-        default: coordinate
-    out:
-      - id: markdup_bam
-    run: ./gatk-sortsam.cwl
-    label: gatk-SortSam
-    scatter:
-      - input
-    'sbg:x': 509.83843994140625
-    'sbg:y': 546.631591796875
   - id: gatk_markduplicates
     in:
       - id: input
-        source: gatk_sortsam/markdup_bam
+        source: gatk_sortsam/sorted_bam
     out:
       - id: markdup_bam
       - id: metrics_file
@@ -225,8 +248,8 @@ steps:
     label: gatk-MarkDuplicates
     scatter:
       - input
-    'sbg:x': 630.1689453125
-    'sbg:y': 644.716064453125
+    'sbg:x': 593.7001342773438
+    'sbg:y': 519.08447265625
   - id: samtools_index
     in:
       - id: input_bam
@@ -237,8 +260,8 @@ steps:
     label: samtools-index
     scatter:
       - input_bam
-    'sbg:x': 689.452880859375
-    'sbg:y': 518.5765380859375
+    'sbg:x': 723.7772216796875
+    'sbg:y': 552.7772216796875
   - id: samtools_index_1
     in:
       - id: input_bam
@@ -251,5 +274,19 @@ steps:
       - input_bam
     'sbg:x': 1024.192138671875
     'sbg:y': 262.8996276855469
+  - id: gatk_sortsam
+    in:
+      - id: input
+        source: gatk_addorreplacereadgroups/output
+      - id: sort_order
+        default: coordinate
+    out:
+      - id: sorted_bam
+    run: ./gatk-sortsam.cwl
+    label: gatk-SortSam
+    scatter:
+      - input
+    'sbg:x': 497.4727783203125
+    'sbg:y': 451.59698486328125
 requirements:
   - class: ScatterFeatureRequirement

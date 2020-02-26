@@ -1,4 +1,3 @@
-#!/usr/bin/env -S cwltool --singularity
 {
     "$graph": [
         {
@@ -80,6 +79,7 @@
                 }
             ],
             "$namespaces": {
+                "sbg": "https://www.sevenbridges.com/"
             }
         },
         {
@@ -520,7 +520,7 @@
             ],
             "outputs": [
                 {
-                    "id": "#gatk-sortsam.cwl/gatk_sortsam/markdup_bam",
+                    "id": "#gatk-sortsam.cwl/gatk_sortsam/sorted_bam",
                     "type": "File",
                     "outputBinding": {
                         "glob": "sorted.$(inputs.input.nameroot).bam"
@@ -601,6 +601,8 @@
                         "type": "array",
                         "items": "string"
                     },
+                    "https://www.sevenbridges.com/x": -2.8485500812530518,
+                    "https://www.sevenbridges.com/y": 423.2580261230469
                 },
                 {
                     "id": "#main/reference",
@@ -614,10 +616,14 @@
                         "^.dict",
                         ".fai"
                     ],
+                    "https://www.sevenbridges.com/x": -8.497928619384766,
+                    "https://www.sevenbridges.com/y": 12.605132102966309
                 },
                 {
                     "id": "#main/platform",
                     "type": "string",
+                    "https://www.sevenbridges.com/x": -1,
+                    "https://www.sevenbridges.com/y": 570.4046630859375
                 },
                 {
                     "id": "#main/reads2",
@@ -625,6 +631,8 @@
                         "type": "array",
                         "items": "File"
                     },
+                    "https://www.sevenbridges.com/x": -6,
+                    "https://www.sevenbridges.com/y": 148
                 },
                 {
                     "id": "#main/reads1",
@@ -632,6 +640,8 @@
                         "type": "array",
                         "items": "File"
                     },
+                    "https://www.sevenbridges.com/x": -6.9248809814453125,
+                    "https://www.sevenbridges.com/y": 289
                 }
             ],
             "outputs": [
@@ -647,6 +657,8 @@
                             "items": "File"
                         }
                     ],
+                    "https://www.sevenbridges.com/x": 1145.0751953125,
+                    "https://www.sevenbridges.com/y": 124
                 },
                 {
                     "id": "#main/result_sam",
@@ -660,6 +672,8 @@
                             "items": "File"
                         }
                     ],
+                    "https://www.sevenbridges.com/x": 304.93255615234375,
+                    "https://www.sevenbridges.com/y": -88.67449188232422
                 },
                 {
                     "id": "#main/output",
@@ -673,6 +687,8 @@
                             "items": "File"
                         }
                     ],
+                    "https://www.sevenbridges.com/x": 486.7845764160156,
+                    "https://www.sevenbridges.com/y": 659.9461669921875
                 },
                 {
                     "id": "#main/vcf",
@@ -686,6 +702,8 @@
                             "items": "File"
                         }
                     ],
+                    "https://www.sevenbridges.com/x": 520.0674438476562,
+                    "https://www.sevenbridges.com/y": -87.20234680175781
                 },
                 {
                     "id": "#main/recalibration_table",
@@ -699,6 +717,8 @@
                             "items": "File"
                         }
                     ],
+                    "https://www.sevenbridges.com/x": 736.4603881835938,
+                    "https://www.sevenbridges.com/y": -89
                 },
                 {
                     "id": "#main/recal_bam",
@@ -712,6 +732,69 @@
                             "items": "File"
                         }
                     ],
+                    "https://www.sevenbridges.com/x": 993.1906127929688,
+                    "https://www.sevenbridges.com/y": 651.49853515625
+                },
+                {
+                    "id": "#main/metrics_file",
+                    "outputSource": [
+                        "#main/gatk_markduplicates/metrics_file"
+                    ],
+                    "type": [
+                        "null",
+                        "File",
+                        {
+                            "type": "array",
+                            "items": "File"
+                        }
+                    ],
+                    "https://www.sevenbridges.com/x": 704.8298950195312,
+                    "https://www.sevenbridges.com/y": 684.1077270507812
+                },
+                {
+                    "id": "#main/indexed_bam",
+                    "outputSource": [
+                        "#main/samtools_index/indexed_bam"
+                    ],
+                    "type": [
+                        "File",
+                        {
+                            "type": "array",
+                            "items": "File"
+                        }
+                    ],
+                    "https://www.sevenbridges.com/x": 824.8849487304688,
+                    "https://www.sevenbridges.com/y": 670.192138671875
+                },
+                {
+                    "id": "#main/indexed_bam_1",
+                    "outputSource": [
+                        "#main/samtools_index_1/indexed_bam"
+                    ],
+                    "type": [
+                        "File",
+                        {
+                            "type": "array",
+                            "items": "File"
+                        }
+                    ],
+                    "https://www.sevenbridges.com/x": 1168.77880859375,
+                    "https://www.sevenbridges.com/y": 329.3497314453125
+                },
+                {
+                    "id": "#main/sorted_bam",
+                    "outputSource": [
+                        "#main/gatk_sortsam/sorted_bam"
+                    ],
+                    "type": [
+                        "File",
+                        {
+                            "type": "array",
+                            "items": "File"
+                        }
+                    ],
+                    "https://www.sevenbridges.com/x": 598.4088134765625,
+                    "https://www.sevenbridges.com/y": 671.5899658203125
                 }
             ],
             "steps": [
@@ -748,6 +831,8 @@
                         "#main/bwa_mem/in2"
                     ],
                     "scatterMethod": "dotproduct",
+                    "https://www.sevenbridges.com/x": 216.4545135498047,
+                    "https://www.sevenbridges.com/y": 245.23739624023438
                 },
                 {
                     "id": "#main/gatk_addorreplacereadgroups",
@@ -787,6 +872,8 @@
                         "#main/gatk_addorreplacereadgroups/rgsm"
                     ],
                     "scatterMethod": "dotproduct",
+                    "https://www.sevenbridges.com/x": 342.4382019042969,
+                    "https://www.sevenbridges.com/y": 437.1689147949219
                 },
                 {
                     "id": "#main/gatk_haplotypecaller",
@@ -811,6 +898,8 @@
                         "#main/gatk_haplotypecaller/input"
                     ],
                     "scatterMethod": "dotproduct",
+                    "https://www.sevenbridges.com/x": 451.4444274902344,
+                    "https://www.sevenbridges.com/y": 265.3333435058594
                 },
                 {
                     "id": "#main/gatk_baserecalibrator",
@@ -840,6 +929,8 @@
                         "#main/gatk_baserecalibrator/known_sites"
                     ],
                     "scatterMethod": "dotproduct",
+                    "https://www.sevenbridges.com/x": 655.6666870117188,
+                    "https://www.sevenbridges.com/y": 221.02032470703125
                 },
                 {
                     "id": "#main/gatk_applybqsr",
@@ -869,6 +960,8 @@
                         "#main/gatk_applybqsr/bqsr_recal_file"
                     ],
                     "scatterMethod": "dotproduct",
+                    "https://www.sevenbridges.com/x": 866.5416870117188,
+                    "https://www.sevenbridges.com/y": 197.4722137451172
                 },
                 {
                     "id": "#main/gatk_haplotypecallergvcf",
@@ -893,36 +986,15 @@
                         "#main/gatk_haplotypecallergvcf/input"
                     ],
                     "scatterMethod": "dotproduct",
-                },
-                {
-                    "id": "#main/gatk_sortsam",
-                    "in": [
-                        {
-                            "id": "#main/gatk_sortsam/input",
-                            "source": "#main/gatk_addorreplacereadgroups/output"
-                        },
-                        {
-                            "id": "#main/gatk_sortsam/sort_order",
-                            "default": "coordinate"
-                        }
-                    ],
-                    "out": [
-                        {
-                            "id": "#main/gatk_sortsam/markdup_bam"
-                        }
-                    ],
-                    "run": "#gatk-sortsam.cwl",
-                    "label": "gatk-SortSam",
-                    "scatter": [
-                        "#main/gatk_sortsam/input"
-                    ],
+                    "https://www.sevenbridges.com/x": 1014.1388549804688,
+                    "https://www.sevenbridges.com/y": 124.69445037841797
                 },
                 {
                     "id": "#main/gatk_markduplicates",
                     "in": [
                         {
                             "id": "#main/gatk_markduplicates/input",
-                            "source": "#main/gatk_sortsam/markdup_bam"
+                            "source": "#main/gatk_sortsam/sorted_bam"
                         }
                     ],
                     "out": [
@@ -938,6 +1010,8 @@
                     "scatter": [
                         "#main/gatk_markduplicates/input"
                     ],
+                    "https://www.sevenbridges.com/x": 593.7001342773438,
+                    "https://www.sevenbridges.com/y": 519.08447265625
                 },
                 {
                     "id": "#main/samtools_index",
@@ -957,6 +1031,8 @@
                     "scatter": [
                         "#main/samtools_index/input_bam"
                     ],
+                    "https://www.sevenbridges.com/x": 723.7772216796875,
+                    "https://www.sevenbridges.com/y": 552.7772216796875
                 },
                 {
                     "id": "#main/samtools_index_1",
@@ -976,6 +1052,33 @@
                     "scatter": [
                         "#main/samtools_index_1/input_bam"
                     ],
+                    "https://www.sevenbridges.com/x": 1024.192138671875,
+                    "https://www.sevenbridges.com/y": 262.8996276855469
+                },
+                {
+                    "id": "#main/gatk_sortsam",
+                    "in": [
+                        {
+                            "id": "#main/gatk_sortsam/input",
+                            "source": "#main/gatk_addorreplacereadgroups/output"
+                        },
+                        {
+                            "id": "#main/gatk_sortsam/sort_order",
+                            "default": "coordinate"
+                        }
+                    ],
+                    "out": [
+                        {
+                            "id": "#main/gatk_sortsam/sorted_bam"
+                        }
+                    ],
+                    "run": "#gatk-sortsam.cwl",
+                    "label": "gatk-SortSam",
+                    "scatter": [
+                        "#main/gatk_sortsam/input"
+                    ],
+                    "https://www.sevenbridges.com/x": 497.4727783203125,
+                    "https://www.sevenbridges.com/y": 451.59698486328125
                 }
             ],
             "requirements": [
