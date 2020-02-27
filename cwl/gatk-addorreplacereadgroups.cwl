@@ -32,6 +32,11 @@ inputs:
     inputBinding:
       position: 0
       prefix: '--RGSM'
+  - id: rgid
+    type: string
+    inputBinding:
+      position: 0
+      prefix: '--RGID'
 outputs:
   - id: output
     type: File
