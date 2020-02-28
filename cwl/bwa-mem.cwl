@@ -8,7 +8,7 @@ baseCommand:
   - mem
 inputs:
   - id: sample_name
-    type: string
+    type: string?
   - id: indexed_reference
     type: File
     inputBinding:

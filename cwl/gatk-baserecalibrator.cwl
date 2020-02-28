@@ -20,7 +20,7 @@ inputs:
       position: 0
       prefix: '--known-sites'
     secondaryFiles:
-      - $(inputs.known_sites.basename).idx
+      - .idx
   - id: reference
     type: File
     inputBinding:

@@ -14,15 +14,13 @@ inputs:
           type: File
         - name: reads2
           type: File?
-        - name: rgsm
+        - name: read_group_name
           type: string
-        - name: rgid
+        - name: library_name
           type: string
-        - name: rglb
+        - name: platform
           type: string
-        - name: rgpl
-          type: string
-        - name: rgpu
+        - name: platform_unit
           type: string
       name: input
 outputs:
@@ -34,26 +32,22 @@ outputs:
     type: File
     outputBinding:
       glob: $(inputs.input.reads2.basename)
-  - id: rgsm
+  - id: read_group_name
     type: string
     outputBinding:
-      outputEval: $(inputs.input.rgsm)
-  - id: rgid
+      outputEval: $(inputs.input.read_group_name)
+  - id: library_name
     type: string
     outputBinding:
-      outputEval: $(inputs.input.rgid)
-  - id: rglb
+      outputEval: $(inputs.input.library_name)
+  - id: platform
     type: string
     outputBinding:
-      outputEval: $(inputs.input.rglb)
-  - id: rgpl
+      outputEval: $(inputs.input.platform)
+  - id: platform_unit
     type: string
     outputBinding:
-      outputEval: $(inputs.input.rgpl)
-  - id: rgpu
-    type: string
-    outputBinding:
-      outputEval: $(inputs.input.rgpu)
+      outputEval: $(inputs.input.platform_unit)
 label: parseReads
 requirements:
   - class: InitialWorkDirRequirement

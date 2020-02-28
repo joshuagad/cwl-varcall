@@ -28,7 +28,7 @@ outputs:
     outputBinding:
       glob: $(inputs.input.nameroot).vcf
     secondaryFiles:
-      - $(inputs.input.nameroot).vcf.idx
+      - .idx
 label: gatk-HaplotypeCallerVCF
 arguments:
   - position: 0

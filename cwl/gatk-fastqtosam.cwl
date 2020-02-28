@@ -7,16 +7,21 @@ baseCommand:
   - gatk
   - FastqToSam
 inputs:
-  - id: fastq1
+  - id: reads1
     type: File
     inputBinding:
       position: 0
       prefix: '--FASTQ'
-  - id: fastq2
+  - id: reads2
     type: File?
     inputBinding:
       position: 0
       prefix: '--FASTQ2'
+  - id: read_group_name
+    type: string
+    inputBinding:
+      position: 0
+      prefix: '--READ_GROUP_NAME'
   - id: sample_name
     type: string
     inputBinding:
@@ -41,12 +46,12 @@ outputs:
   - id: unmapped_bam
     type: File
     outputBinding:
-      glob: unmapped.$(inputs.sample_name).bam
+      glob: unmapped.bam
 label: gatk-FastqToSam
 arguments:
   - position: 0
     prefix: '-O'
-    valueFrom: unmapped.$(inputs.sample_name).bam
+    valueFrom: unmapped.bam
   - position: 0
     prefix: '--SORT_ORDER'
     valueFrom: queryname
