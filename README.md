@@ -13,27 +13,39 @@ The main programs **varcall-standard** and **varcall-spark** may be copied to PA
 ```bash
 ## Standard pipeline
 ./varcall-standard <job.yaml>
-## Spark-enabled pipeline
-./varcall-spark <job.yaml>
 ```
 The job.yaml file must contain the information for your current job. It is formatted as:
 ```yaml
 reference:
   class: File
   path: /path/to/ref.fa
-reads1:
-  - class: File
-    path: /path/to/readsA.fq
-  - class: File
-    path: /path/to/readsB.fq
-reads2:
-  - class: File
-    path: /path/to/readsA.fq
-  - class: File
-    path: /path/to/readsB.fq
-sample_name:
-  - sampleA
-  - sampleB
-platform: ILLUMINA
+sample_name: sample
+input:
+  - read_group_name: readsA
+    reads1:
+      class: File
+      path: /path/to/readsA.1.fq
+    reads2:
+      class: File
+      path: /path/to/readsA.2.fq
+    library_name: library
+    platform: ILLUMINA
+    platform_unit: readsA
+  - read_group_name: readsB
+    reads1:
+      class: File
+      path: readsB.1.fq
+    reads2:
+      class: File
+      path: readsB.2.fq
+    library_name: library
+    platform: ILLUMINA
+    platform_unit: readsB
 ```
-The pipeline can take in multiple samples, for as long as the paths are properly formatted in the job.yaml file.
+It is important to classify reads according to the sequencing experiment design as the recalibration will take these into account in removing biases.
+**read_group_name** - Unique identifier for a read group's sequencing run
+**library_name** - Identifier for library used
+**platform** - Sequencing platform used
+**platform_unit** - Usually the same as read_group_name but required by GATK
+
+The pipeline must only be run for one sample at a time with all libraries / sequencing data laid out in the yaml file.
