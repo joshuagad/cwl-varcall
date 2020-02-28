@@ -1,3 +1,4 @@
+#!/usr/bin/env cwltool
 {
     "$graph": [
         {
@@ -10,7 +11,7 @@
             "inputs": [
                 {
                     "id": "#bwa-mem.cwl/bwa_mem/sample_name",
-                    "type": "string"
+                    "type": "string?"
                 },
                 {
                     "id": "#bwa-mem.cwl/bwa_mem/indexed_reference",
@@ -79,84 +80,7 @@
                 }
             ],
             "$namespaces": {
-                "sbg": "https://www.sevenbridges.com/"
             }
-        },
-        {
-            "class": "CommandLineTool",
-            "id": "#gatk-addorreplacereadgroups.cwl",
-            "baseCommand": [
-                "gatk",
-                "AddOrReplaceReadGroups"
-            ],
-            "inputs": [
-                {
-                    "id": "#gatk-addorreplacereadgroups.cwl/gatk_addorreplacereadgroups/input",
-                    "type": "File",
-                    "inputBinding": {
-                        "position": 0,
-                        "prefix": "--INPUT"
-                    }
-                },
-                {
-                    "id": "#gatk-addorreplacereadgroups.cwl/gatk_addorreplacereadgroups/rglb",
-                    "type": "string",
-                    "inputBinding": {
-                        "position": 0,
-                        "prefix": "--RGLB"
-                    }
-                },
-                {
-                    "id": "#gatk-addorreplacereadgroups.cwl/gatk_addorreplacereadgroups/rgpl",
-                    "type": "string",
-                    "inputBinding": {
-                        "position": 0,
-                        "prefix": "--RGPL"
-                    }
-                },
-                {
-                    "id": "#gatk-addorreplacereadgroups.cwl/gatk_addorreplacereadgroups/rgpu",
-                    "type": "string",
-                    "inputBinding": {
-                        "position": 0,
-                        "prefix": "--RGPU"
-                    }
-                },
-                {
-                    "id": "#gatk-addorreplacereadgroups.cwl/gatk_addorreplacereadgroups/rgsm",
-                    "type": "string",
-                    "inputBinding": {
-                        "position": 0,
-                        "prefix": "--RGSM"
-                    }
-                }
-            ],
-            "outputs": [
-                {
-                    "id": "#gatk-addorreplacereadgroups.cwl/gatk_addorreplacereadgroups/output",
-                    "type": "File",
-                    "outputBinding": {
-                        "glob": "addrep.$(inputs.input.nameroot).bam"
-                    }
-                }
-            ],
-            "label": "gatk-AddOrReplaceReadGroups",
-            "arguments": [
-                {
-                    "position": 0,
-                    "prefix": "--OUTPUT",
-                    "valueFrom": "addrep.$(inputs.input.nameroot).bam"
-                }
-            ],
-            "requirements": [
-                {
-                    "class": "DockerRequirement",
-                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
-                },
-                {
-                    "class": "InlineJavascriptRequirement"
-                }
-            ]
         },
         {
             "class": "CommandLineTool",
@@ -260,7 +184,7 @@
                         "prefix": "--known-sites"
                     },
                     "secondaryFiles": [
-                        "$(inputs.known_sites.basename).idx"
+                        ".idx"
                     ]
                 },
                 {
@@ -291,6 +215,103 @@
                     "position": 0,
                     "prefix": "--output",
                     "valueFrom": "recal.$(inputs.input.basename).txt"
+                }
+            ],
+            "requirements": [
+                {
+                    "class": "DockerRequirement",
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
+                },
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        },
+        {
+            "class": "CommandLineTool",
+            "id": "#gatk-fastqtosam.cwl",
+            "baseCommand": [
+                "gatk",
+                "FastqToSam"
+            ],
+            "inputs": [
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/reads1",
+                    "type": "File",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--FASTQ"
+                    }
+                },
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/reads2",
+                    "type": "File?",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--FASTQ2"
+                    }
+                },
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/read_group_name",
+                    "type": "string",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--READ_GROUP_NAME"
+                    }
+                },
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/sample_name",
+                    "type": "string",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--SAMPLE_NAME"
+                    }
+                },
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/library_name",
+                    "type": "string",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--LIBRARY_NAME"
+                    }
+                },
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/platform",
+                    "type": "string",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--PLATFORM"
+                    }
+                },
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/platform_unit",
+                    "type": "string",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--PLATFORM_UNIT"
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "id": "#gatk-fastqtosam.cwl/gatk_fastqtosam/unmapped_bam",
+                    "type": "File",
+                    "outputBinding": {
+                        "glob": "unmapped.bam"
+                    }
+                }
+            ],
+            "label": "gatk-FastqToSam",
+            "arguments": [
+                {
+                    "position": 0,
+                    "prefix": "-O",
+                    "valueFrom": "unmapped.bam"
+                },
+                {
+                    "position": 0,
+                    "prefix": "--SORT_ORDER",
+                    "valueFrom": "queryname"
                 }
             ],
             "requirements": [
@@ -407,7 +428,7 @@
                         "glob": "$(inputs.input.nameroot).vcf"
                     },
                     "secondaryFiles": [
-                        "$(inputs.input.nameroot).vcf.idx"
+                        ".idx"
                     ]
                 }
             ],
@@ -444,11 +465,17 @@
             "inputs": [
                 {
                     "id": "#gatk-markduplicates.cwl/gatk_markduplicates/input",
-                    "type": "File",
+                    "type": "File[]",
                     "inputBinding": {
                         "position": 0,
-                        "prefix": "-I"
+                        "prefix": "-I",
+                        "itemSeparator": " -I ",
+                        "shellQuote": false
                     }
+                },
+                {
+                    "id": "#gatk-markduplicates.cwl/gatk_markduplicates/sample_name",
+                    "type": "string"
                 }
             ],
             "outputs": [
@@ -456,7 +483,7 @@
                     "id": "#gatk-markduplicates.cwl/gatk_markduplicates/markdup_bam",
                     "type": "File",
                     "outputBinding": {
-                        "glob": "markdup.$(inputs.input.nameroot).bam"
+                        "glob": "$(inputs.sample_name).bam"
                     },
                     "secondaryFiles": [
                         "^bai"
@@ -466,7 +493,7 @@
                     "id": "#gatk-markduplicates.cwl/gatk_markduplicates/metrics_file",
                     "type": "File?",
                     "outputBinding": {
-                        "glob": "markdup.$(inputs.input.nameroot).metrics.txt"
+                        "glob": "$(inputs.sample_name).metrics.txt"
                     }
                 }
             ],
@@ -475,21 +502,84 @@
                 {
                     "position": 0,
                     "prefix": "-O",
-                    "valueFrom": "markdup.$(inputs.input.nameroot).bam"
+                    "valueFrom": "$(inputs.sample_name).bam"
                 },
                 {
                     "position": 0,
                     "prefix": "--METRICS_FILE",
-                    "valueFrom": "markdup.$(inputs.input.nameroot).metrics.txt"
+                    "valueFrom": "$(inputs.sample_name).metrics.txt"
                 }
             ],
             "requirements": [
+                {
+                    "class": "ShellCommandRequirement"
+                },
                 {
                     "class": "DockerRequirement",
                     "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
                 },
                 {
                     "class": "InlineJavascriptRequirement"
+                }
+            ]
+        },
+        {
+            "class": "CommandLineTool",
+            "id": "#gatk-mergebamalignment.cwl",
+            "baseCommand": [
+                "gatk",
+                "MergeBamAlignment"
+            ],
+            "inputs": [
+                {
+                    "id": "#gatk-mergebamalignment.cwl/gatk_mergebamalignment/reference",
+                    "type": "File",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--REFERENCE_SEQUENCE"
+                    },
+                    "secondaryFiles": [
+                        "^.dict"
+                    ]
+                },
+                {
+                    "id": "#gatk-mergebamalignment.cwl/gatk_mergebamalignment/unmapped",
+                    "type": "File",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--UNMAPPED"
+                    }
+                },
+                {
+                    "id": "#gatk-mergebamalignment.cwl/gatk_mergebamalignment/aligned",
+                    "type": "File",
+                    "inputBinding": {
+                        "position": 0,
+                        "prefix": "--ALIGNED"
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "id": "#gatk-mergebamalignment.cwl/gatk_mergebamalignment/output",
+                    "type": "File",
+                    "outputBinding": {
+                        "glob": "merged.bam"
+                    }
+                }
+            ],
+            "label": "gatk-MergeBamAlignment",
+            "arguments": [
+                {
+                    "position": 0,
+                    "prefix": "--OUTPUT",
+                    "valueFrom": "merged.bam"
+                }
+            ],
+            "requirements": [
+                {
+                    "class": "DockerRequirement",
+                    "dockerPull": "pgcbioinfo/gatk:4.1.4.0"
                 }
             ]
         },
@@ -547,6 +637,105 @@
         },
         {
             "class": "CommandLineTool",
+            "id": "#parsereads.cwl",
+            "baseCommand": [
+                "echo"
+            ],
+            "inputs": [
+                {
+                    "id": "#parsereads.cwl/parsereads/input",
+                    "type": {
+                        "type": "record",
+                        "fields": [
+                            {
+                                "name": "#reads1",
+                                "type": "File"
+                            },
+                            {
+                                "name": "#reads2",
+                                "type": "File?"
+                            },
+                            {
+                                "name": "#read_group_name",
+                                "type": "string"
+                            },
+                            {
+                                "name": "#library_name",
+                                "type": "string"
+                            },
+                            {
+                                "name": "#platform",
+                                "type": "string"
+                            },
+                            {
+                                "name": "#platform_unit",
+                                "type": "string"
+                            }
+                        ],
+                        "name": "#input"
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "id": "#parsereads.cwl/parsereads/reads1",
+                    "type": "File",
+                    "outputBinding": {
+                        "glob": "$(inputs.input.reads1.basename)"
+                    }
+                },
+                {
+                    "id": "#parsereads.cwl/parsereads/reads2",
+                    "type": "File",
+                    "outputBinding": {
+                        "glob": "$(inputs.input.reads2.basename)"
+                    }
+                },
+                {
+                    "id": "#parsereads.cwl/parsereads/read_group_name",
+                    "type": "string",
+                    "outputBinding": {
+                        "outputEval": "$(inputs.input.read_group_name)"
+                    }
+                },
+                {
+                    "id": "#parsereads.cwl/parsereads/library_name",
+                    "type": "string",
+                    "outputBinding": {
+                        "outputEval": "$(inputs.input.library_name)"
+                    }
+                },
+                {
+                    "id": "#parsereads.cwl/parsereads/platform",
+                    "type": "string",
+                    "outputBinding": {
+                        "outputEval": "$(inputs.input.platform)"
+                    }
+                },
+                {
+                    "id": "#parsereads.cwl/parsereads/platform_unit",
+                    "type": "string",
+                    "outputBinding": {
+                        "outputEval": "$(inputs.input.platform_unit)"
+                    }
+                }
+            ],
+            "label": "parseReads",
+            "requirements": [
+                {
+                    "class": "InitialWorkDirRequirement",
+                    "listing": [
+                        "$(inputs.input.reads1)",
+                        "$(inputs.input.reads2)"
+                    ]
+                },
+                {
+                    "class": "InlineJavascriptRequirement"
+                }
+            ]
+        },
+        {
+            "class": "CommandLineTool",
             "id": "#samtools-index.cwl",
             "baseCommand": [
                 "samtools",
@@ -596,15 +785,6 @@
             "label": "varcall-standard",
             "inputs": [
                 {
-                    "id": "#main/sample_name",
-                    "type": {
-                        "type": "array",
-                        "items": "string"
-                    },
-                    "https://www.sevenbridges.com/x": -2.8485500812530518,
-                    "https://www.sevenbridges.com/y": 423.2580261230469
-                },
-                {
                     "id": "#main/reference",
                     "type": "File",
                     "secondaryFiles": [
@@ -616,35 +796,66 @@
                         "^.dict",
                         ".fai"
                     ],
-                    "https://www.sevenbridges.com/x": -8.497928619384766,
-                    "https://www.sevenbridges.com/y": 12.605132102966309
                 },
                 {
-                    "id": "#main/platform",
+                    "id": "#main/sample_name",
                     "type": "string",
-                    "https://www.sevenbridges.com/x": -1,
-                    "https://www.sevenbridges.com/y": 570.4046630859375
                 },
                 {
-                    "id": "#main/reads2",
+                    "id": "#main/input",
                     "type": {
                         "type": "array",
-                        "items": "File"
+                        "items": {
+                            "type": "record",
+                            "name": "#main/input/input",
+                            "fields": [
+                                {
+                                    "name": "#main/input/input/reads1",
+                                    "type": "File"
+                                },
+                                {
+                                    "name": "#main/input/input/reads2",
+                                    "type": [
+                                        "null",
+                                        "File"
+                                    ]
+                                },
+                                {
+                                    "name": "#main/input/input/read_group_name",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "#main/input/input/library_name",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "#main/input/input/platform",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "#main/input/input/platform_unit",
+                                    "type": "string"
+                                }
+                            ]
+                        }
                     },
-                    "https://www.sevenbridges.com/x": -6,
-                    "https://www.sevenbridges.com/y": 148
-                },
-                {
-                    "id": "#main/reads1",
-                    "type": {
-                        "type": "array",
-                        "items": "File"
-                    },
-                    "https://www.sevenbridges.com/x": -6.9248809814453125,
-                    "https://www.sevenbridges.com/y": 289
                 }
             ],
             "outputs": [
+                {
+                    "id": "#main/sample_bam",
+                    "outputSource": [
+                        "#main/samtools_index/indexed_bam"
+                    ],
+                    "type": "File",
+                },
+                {
+                    "id": "#main/recalibrated_bam",
+                    "outputSource": [
+                        "#main/samtools_index_1/indexed_bam"
+                    ],
+                    "type": "File",
+                },
                 {
                     "id": "#main/gvcf",
                     "outputSource": [
@@ -657,165 +868,46 @@
                             "items": "File"
                         }
                     ],
-                    "https://www.sevenbridges.com/x": 1145.0751953125,
-                    "https://www.sevenbridges.com/y": 124
-                },
-                {
-                    "id": "#main/result_sam",
-                    "outputSource": [
-                        "#main/bwa_mem/result_sam"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 304.93255615234375,
-                    "https://www.sevenbridges.com/y": -88.67449188232422
-                },
-                {
-                    "id": "#main/output",
-                    "outputSource": [
-                        "#main/gatk_addorreplacereadgroups/output"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 486.7845764160156,
-                    "https://www.sevenbridges.com/y": 659.9461669921875
-                },
-                {
-                    "id": "#main/vcf",
-                    "outputSource": [
-                        "#main/gatk_haplotypecaller/vcf"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 520.0674438476562,
-                    "https://www.sevenbridges.com/y": -87.20234680175781
-                },
-                {
-                    "id": "#main/recalibration_table",
-                    "outputSource": [
-                        "#main/gatk_baserecalibrator/recalibration_table"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 736.4603881835938,
-                    "https://www.sevenbridges.com/y": -89
-                },
-                {
-                    "id": "#main/recal_bam",
-                    "outputSource": [
-                        "#main/gatk_applybqsr/recal_bam"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 993.1906127929688,
-                    "https://www.sevenbridges.com/y": 651.49853515625
-                },
-                {
-                    "id": "#main/metrics_file",
-                    "outputSource": [
-                        "#main/gatk_markduplicates/metrics_file"
-                    ],
-                    "type": [
-                        "null",
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 704.8298950195312,
-                    "https://www.sevenbridges.com/y": 684.1077270507812
-                },
-                {
-                    "id": "#main/indexed_bam",
-                    "outputSource": [
-                        "#main/samtools_index/indexed_bam"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 824.8849487304688,
-                    "https://www.sevenbridges.com/y": 670.192138671875
-                },
-                {
-                    "id": "#main/indexed_bam_1",
-                    "outputSource": [
-                        "#main/samtools_index_1/indexed_bam"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 1168.77880859375,
-                    "https://www.sevenbridges.com/y": 329.3497314453125
-                },
-                {
-                    "id": "#main/sorted_bam",
-                    "outputSource": [
-                        "#main/gatk_sortsam/sorted_bam"
-                    ],
-                    "type": [
-                        "File",
-                        {
-                            "type": "array",
-                            "items": "File"
-                        }
-                    ],
-                    "https://www.sevenbridges.com/x": 598.4088134765625,
-                    "https://www.sevenbridges.com/y": 671.5899658203125
                 }
             ],
             "steps": [
                 {
-                    "id": "#main/bwa_mem",
+                    "id": "#main/gatk_sortsam",
                     "in": [
                         {
-                            "id": "#main/bwa_mem/sample_name",
-                            "source": "#main/sample_name"
+                            "id": "#main/gatk_sortsam/input",
+                            "source": "#main/gatk_mergebamalignment/output"
                         },
+                        {
+                            "id": "#main/gatk_sortsam/sort_order",
+                            "default": "coordinate"
+                        }
+                    ],
+                    "out": [
+                        {
+                            "id": "#main/gatk_sortsam/sorted_bam"
+                        }
+                    ],
+                    "run": "#gatk-sortsam.cwl",
+                    "label": "gatk-SortSam",
+                    "scatter": [
+                        "#main/gatk_sortsam/input"
+                    ],
+                },
+                {
+                    "id": "#main/bwa_mem",
+                    "in": [
                         {
                             "id": "#main/bwa_mem/indexed_reference",
                             "source": "#main/reference"
                         },
                         {
                             "id": "#main/bwa_mem/in1",
-                            "source": "#main/reads1"
+                            "source": "#main/parsereads/reads1"
                         },
                         {
                             "id": "#main/bwa_mem/in2",
-                            "source": "#main/reads2"
+                            "source": "#main/parsereads/reads2"
                         }
                     ],
                     "out": [
@@ -826,54 +918,164 @@
                     "run": "#bwa-mem.cwl",
                     "label": "bwa-mem",
                     "scatter": [
-                        "#main/bwa_mem/sample_name",
                         "#main/bwa_mem/in1",
                         "#main/bwa_mem/in2"
                     ],
                     "scatterMethod": "dotproduct",
-                    "https://www.sevenbridges.com/x": 216.4545135498047,
-                    "https://www.sevenbridges.com/y": 245.23739624023438
                 },
                 {
-                    "id": "#main/gatk_addorreplacereadgroups",
+                    "id": "#main/gatk_mergebamalignment",
                     "in": [
                         {
-                            "id": "#main/gatk_addorreplacereadgroups/input",
+                            "id": "#main/gatk_mergebamalignment/reference",
+                            "source": "#main/reference"
+                        },
+                        {
+                            "id": "#main/gatk_mergebamalignment/unmapped",
+                            "source": "#main/gatk_fastqtosam/unmapped_bam"
+                        },
+                        {
+                            "id": "#main/gatk_mergebamalignment/aligned",
                             "source": "#main/bwa_mem/result_sam"
+                        }
+                    ],
+                    "out": [
+                        {
+                            "id": "#main/gatk_mergebamalignment/output"
+                        }
+                    ],
+                    "run": "#gatk-mergebamalignment.cwl",
+                    "label": "gatk-MergeBamAlignment",
+                    "scatter": [
+                        "#main/gatk_mergebamalignment/unmapped",
+                        "#main/gatk_mergebamalignment/aligned"
+                    ],
+                    "scatterMethod": "dotproduct",
+                },
+                {
+                    "id": "#main/samtools_index",
+                    "in": [
+                        {
+                            "id": "#main/samtools_index/input_bam",
+                            "source": "#main/gatk_markduplicates/markdup_bam"
+                        }
+                    ],
+                    "out": [
+                        {
+                            "id": "#main/samtools_index/indexed_bam"
+                        }
+                    ],
+                    "run": "#samtools-index.cwl",
+                    "label": "samtools-index",
+                },
+                {
+                    "id": "#main/gatk_markduplicates",
+                    "in": [
+                        {
+                            "id": "#main/gatk_markduplicates/input",
+                            "source": [
+                                "#main/gatk_sortsam/sorted_bam"
+                            ]
                         },
                         {
-                            "id": "#main/gatk_addorreplacereadgroups/rglb",
-                            "source": "#main/sample_name"
-                        },
-                        {
-                            "id": "#main/gatk_addorreplacereadgroups/rgpl",
-                            "source": "#main/sample_name"
-                        },
-                        {
-                            "id": "#main/gatk_addorreplacereadgroups/rgpu",
-                            "source": "#main/platform"
-                        },
-                        {
-                            "id": "#main/gatk_addorreplacereadgroups/rgsm",
+                            "id": "#main/gatk_markduplicates/sample_name",
                             "source": "#main/sample_name"
                         }
                     ],
                     "out": [
                         {
-                            "id": "#main/gatk_addorreplacereadgroups/output"
+                            "id": "#main/gatk_markduplicates/markdup_bam"
+                        },
+                        {
+                            "id": "#main/gatk_markduplicates/metrics_file"
                         }
                     ],
-                    "run": "#gatk-addorreplacereadgroups.cwl",
-                    "label": "gatk-AddOrReplaceReadGroups",
+                    "run": "#gatk-markduplicates.cwl",
+                    "label": "gatk-MarkDuplicates",
+                },
+                {
+                    "id": "#main/parsereads",
+                    "in": [
+                        {
+                            "id": "#main/parsereads/input",
+                            "source": "#main/input"
+                        }
+                    ],
+                    "out": [
+                        {
+                            "id": "#main/parsereads/reads1"
+                        },
+                        {
+                            "id": "#main/parsereads/reads2"
+                        },
+                        {
+                            "id": "#main/parsereads/read_group_name"
+                        },
+                        {
+                            "id": "#main/parsereads/library_name"
+                        },
+                        {
+                            "id": "#main/parsereads/platform"
+                        },
+                        {
+                            "id": "#main/parsereads/platform_unit"
+                        }
+                    ],
+                    "run": "#parsereads.cwl",
+                    "label": "parseReads",
                     "scatter": [
-                        "#main/gatk_addorreplacereadgroups/input",
-                        "#main/gatk_addorreplacereadgroups/rglb",
-                        "#main/gatk_addorreplacereadgroups/rgpl",
-                        "#main/gatk_addorreplacereadgroups/rgsm"
+                        "#main/parsereads/input"
                     ],
                     "scatterMethod": "dotproduct",
-                    "https://www.sevenbridges.com/x": 342.4382019042969,
-                    "https://www.sevenbridges.com/y": 437.1689147949219
+                },
+                {
+                    "id": "#main/gatk_fastqtosam",
+                    "in": [
+                        {
+                            "id": "#main/gatk_fastqtosam/reads1",
+                            "source": "#main/parsereads/reads1"
+                        },
+                        {
+                            "id": "#main/gatk_fastqtosam/reads2",
+                            "source": "#main/parsereads/reads2"
+                        },
+                        {
+                            "id": "#main/gatk_fastqtosam/read_group_name",
+                            "source": "#main/parsereads/read_group_name"
+                        },
+                        {
+                            "id": "#main/gatk_fastqtosam/sample_name",
+                            "source": "#main/sample_name"
+                        },
+                        {
+                            "id": "#main/gatk_fastqtosam/library_name",
+                            "source": "#main/parsereads/library_name"
+                        },
+                        {
+                            "id": "#main/gatk_fastqtosam/platform",
+                            "source": "#main/parsereads/platform"
+                        },
+                        {
+                            "id": "#main/gatk_fastqtosam/platform_unit",
+                            "source": "#main/parsereads/platform_unit"
+                        }
+                    ],
+                    "out": [
+                        {
+                            "id": "#main/gatk_fastqtosam/unmapped_bam"
+                        }
+                    ],
+                    "run": "#gatk-fastqtosam.cwl",
+                    "label": "gatk-FastqToSam",
+                    "scatter": [
+                        "#main/gatk_fastqtosam/reads1",
+                        "#main/gatk_fastqtosam/reads2",
+                        "#main/gatk_fastqtosam/read_group_name",
+                        "#main/gatk_fastqtosam/library_name",
+                        "#main/gatk_fastqtosam/platform",
+                        "#main/gatk_fastqtosam/platform_unit"
+                    ],
+                    "scatterMethod": "dotproduct",
                 },
                 {
                     "id": "#main/gatk_haplotypecaller",
@@ -894,12 +1096,6 @@
                     ],
                     "run": "#gatk-haplotypecallervcf.cwl",
                     "label": "gatk-HaplotypeCallerVCF",
-                    "scatter": [
-                        "#main/gatk_haplotypecaller/input"
-                    ],
-                    "scatterMethod": "dotproduct",
-                    "https://www.sevenbridges.com/x": 451.4444274902344,
-                    "https://www.sevenbridges.com/y": 265.3333435058594
                 },
                 {
                     "id": "#main/gatk_baserecalibrator",
@@ -924,13 +1120,6 @@
                     ],
                     "run": "#gatk-baserecalibrator.cwl",
                     "label": "gatk-BaseRecalibrator",
-                    "scatter": [
-                        "#main/gatk_baserecalibrator/input",
-                        "#main/gatk_baserecalibrator/known_sites"
-                    ],
-                    "scatterMethod": "dotproduct",
-                    "https://www.sevenbridges.com/x": 655.6666870117188,
-                    "https://www.sevenbridges.com/y": 221.02032470703125
                 },
                 {
                     "id": "#main/gatk_applybqsr",
@@ -955,13 +1144,22 @@
                     ],
                     "run": "#gatk-applybqsr.cwl",
                     "label": "gatk-ApplyBQSR",
-                    "scatter": [
-                        "#main/gatk_applybqsr/input",
-                        "#main/gatk_applybqsr/bqsr_recal_file"
+                },
+                {
+                    "id": "#main/samtools_index_1",
+                    "in": [
+                        {
+                            "id": "#main/samtools_index_1/input_bam",
+                            "source": "#main/gatk_applybqsr/recal_bam"
+                        }
                     ],
-                    "scatterMethod": "dotproduct",
-                    "https://www.sevenbridges.com/x": 866.5416870117188,
-                    "https://www.sevenbridges.com/y": 197.4722137451172
+                    "out": [
+                        {
+                            "id": "#main/samtools_index_1/indexed_bam"
+                        }
+                    ],
+                    "run": "#samtools-index.cwl",
+                    "label": "samtools-index",
                 },
                 {
                     "id": "#main/gatk_haplotypecallergvcf",
@@ -982,103 +1180,6 @@
                     ],
                     "run": "#gatk-haplotypecallergvcf.cwl",
                     "label": "gatk-HaplotypeCallerGVCF",
-                    "scatter": [
-                        "#main/gatk_haplotypecallergvcf/input"
-                    ],
-                    "scatterMethod": "dotproduct",
-                    "https://www.sevenbridges.com/x": 1014.1388549804688,
-                    "https://www.sevenbridges.com/y": 124.69445037841797
-                },
-                {
-                    "id": "#main/gatk_markduplicates",
-                    "in": [
-                        {
-                            "id": "#main/gatk_markduplicates/input",
-                            "source": "#main/gatk_sortsam/sorted_bam"
-                        }
-                    ],
-                    "out": [
-                        {
-                            "id": "#main/gatk_markduplicates/markdup_bam"
-                        },
-                        {
-                            "id": "#main/gatk_markduplicates/metrics_file"
-                        }
-                    ],
-                    "run": "#gatk-markduplicates.cwl",
-                    "label": "gatk-MarkDuplicates",
-                    "scatter": [
-                        "#main/gatk_markduplicates/input"
-                    ],
-                    "https://www.sevenbridges.com/x": 593.7001342773438,
-                    "https://www.sevenbridges.com/y": 519.08447265625
-                },
-                {
-                    "id": "#main/samtools_index",
-                    "in": [
-                        {
-                            "id": "#main/samtools_index/input_bam",
-                            "source": "#main/gatk_markduplicates/markdup_bam"
-                        }
-                    ],
-                    "out": [
-                        {
-                            "id": "#main/samtools_index/indexed_bam"
-                        }
-                    ],
-                    "run": "#samtools-index.cwl",
-                    "label": "samtools-index",
-                    "scatter": [
-                        "#main/samtools_index/input_bam"
-                    ],
-                    "https://www.sevenbridges.com/x": 723.7772216796875,
-                    "https://www.sevenbridges.com/y": 552.7772216796875
-                },
-                {
-                    "id": "#main/samtools_index_1",
-                    "in": [
-                        {
-                            "id": "#main/samtools_index_1/input_bam",
-                            "source": "#main/gatk_applybqsr/recal_bam"
-                        }
-                    ],
-                    "out": [
-                        {
-                            "id": "#main/samtools_index_1/indexed_bam"
-                        }
-                    ],
-                    "run": "#samtools-index.cwl",
-                    "label": "samtools-index",
-                    "scatter": [
-                        "#main/samtools_index_1/input_bam"
-                    ],
-                    "https://www.sevenbridges.com/x": 1024.192138671875,
-                    "https://www.sevenbridges.com/y": 262.8996276855469
-                },
-                {
-                    "id": "#main/gatk_sortsam",
-                    "in": [
-                        {
-                            "id": "#main/gatk_sortsam/input",
-                            "source": "#main/gatk_addorreplacereadgroups/output"
-                        },
-                        {
-                            "id": "#main/gatk_sortsam/sort_order",
-                            "default": "coordinate"
-                        }
-                    ],
-                    "out": [
-                        {
-                            "id": "#main/gatk_sortsam/sorted_bam"
-                        }
-                    ],
-                    "run": "#gatk-sortsam.cwl",
-                    "label": "gatk-SortSam",
-                    "scatter": [
-                        "#main/gatk_sortsam/input"
-                    ],
-                    "https://www.sevenbridges.com/x": 497.4727783203125,
-                    "https://www.sevenbridges.com/y": 451.59698486328125
                 }
             ],
             "requirements": [
